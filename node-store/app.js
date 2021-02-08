@@ -1,9 +1,15 @@
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
+const favicon = require('serve-favicon');
+const bodyParser = require('body-parser');
+const passport = require('passport');
+// const passportLocalMongoose = require('passport-local-mongoose');
+const User = require('./models/user');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
+//Require routes
 const indexRouter   = require('./routes/index');
 const postsRouter   = require('./routes/posts');
 const reviewsRouter = require('./routes/reviews');
@@ -20,6 +26,20 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+//Configure Passport & sessions
+app.use(session({
+    secret: "sinivalkoinen salaisuus",
+    resave: false,
+    saveUnitialized: true
+}))
+
+// CHANGE: USE "createStrategy" INSTEAD OF "authenticate"
+passport.use(User.createStrategy());
+
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+// Mount routes
 app.use('/', indexRouter);
 app.use('/posts', postsRouter);
 app.use('/posts/:id/reviews', reviewsRouter);
