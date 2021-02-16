@@ -8,9 +8,7 @@ router.get('/', (req, res, next) => {
 });
 
 /* GET /register. */
-router.get('/register', (req, res, next) => {
-  res.send('GET /register');
-});
+router.get('/register', postRegister);
 
 /* POST /register */
 router.post('/register', (req, res, next) => {

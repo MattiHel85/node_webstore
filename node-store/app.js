@@ -2,12 +2,12 @@ const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const favicon = require('serve-favicon');
+const logger = require('morgan');
+const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const passport = require('passport');
-// const passportLocalMongoose = require('passport-local-mongoose');
 const User = require('./models/user');
-const cookieParser = require('cookie-parser');
-const logger = require('morgan');
+const session = require('express-session');
 
 //Require routes
 const indexRouter   = require('./routes/index');
@@ -30,10 +30,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
     secret: "sinivalkoinen salaisuus",
     resave: false,
-    saveUnitialized: true
+    saveUninitialized: true
 }))
 
-// CHANGE: USE "createStrategy" INSTEAD OF "authenticate"
 passport.use(User.createStrategy());
 
 passport.serializeUser(User.serializeUser());
